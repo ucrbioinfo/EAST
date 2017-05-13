@@ -1,6 +1,6 @@
 import numpy as np
 from timeit import time
-from numba import vectorize,guvectorize,float64,int64
+from numba import guvectorize,float64,int64
 import os
 
 maxW = 80
