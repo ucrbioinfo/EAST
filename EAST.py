@@ -16,7 +16,7 @@ elif SPECIES == 'mES' or 'mCO':
 for CHRM in range(22,NUM_OF_CHRMS+1):
     print('Loading Chromosome '+ str(CHRM))
     st = time.time()
-    chr1 = np.loadtxt(os.path.abspath(os.sep)+'Users/Abbas/Google Drive/Research/Dataset/'+SPECIES+'/nij/nij.chr'+str(CHRM))
+    chr1 = np.loadtxt(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/nij/nij.chr'+str(CHRM))
     print('time to read chromosome ',CHRM,':',time.time()-st)
     CUT = chr1.shape[0]
     #print('********************** TAD DETECTION *****************************')
