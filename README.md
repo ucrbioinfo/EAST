@@ -8,4 +8,4 @@ EAST: Efficient and Accurate Detection of Topologically Associating Domains from
 
 # Example Run
 
-Input files are matrices in the format of Dixon et al. at http://chromosome.sdsc.edu/mouse/hi-c/download.html. The maxW parameter determines the maximum size of a TAD allowed in the algorithm (max-size = resoultion*maxW).
+Input files are matrices in the format of Dixon et al. at http://chromosome.sdsc.edu/mouse/hi-c/download.html. The maxW parameter determines the maximum size of a TAD allowed in the algorithm (maximum size of a TAD = resoultion*maxW).
