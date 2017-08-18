@@ -8,12 +8,12 @@ maxL = 2*maxW + 1
 minL = 3
 sampleSize = 2*maxL
 
-SPECIES = 'hES'
+SPECIES = 'mES'
 if SPECIES=='hIMR90' or SPECIES=='hES':
     NUM_OF_CHRMS = 23
 elif SPECIES == 'mES' or 'mCO':
     NUM_OF_CHRMS = 20
-for CHRM in range(22,NUM_OF_CHRMS+1):
+for CHRM in range(1,NUM_OF_CHRMS+1):
     print('Loading Chromosome '+ str(CHRM))
     st = time.time()
     chr1 = np.loadtxt(os.path.abspath(os.sep)+'Users/Abbas/Google Drive/Research/Dataset/'+SPECIES+'/nij/nij.chr'+str(CHRM))
@@ -28,52 +28,33 @@ for CHRM in range(22,NUM_OF_CHRMS+1):
         wScore = 0
 
         c1 = 1.0 
-        c2 = 0.2
-        c3 = 0.2  #penalty for inter-TAD interactions
+        beta = 0.2
+        alpha = 0.1  #penalty for inter-TAD interactions
         if l[0] % 2 == 0:
             w = (l[0])/2
             w2 = np.math.ceil(w/5)
 
-            A = [int(i[0]-2*w+i_indent),int(i[0]-w+j_indent)]
-            B = [int(i[0]-2*w+i_indent),int(i[0]+w+j_indent)]
-            C = [int(i[0]-w+i_indent),int(i[0]-w+j_indent)]
+            A = [int(i[0]-w-l[0]+i_indent),int(i[0]-w+j_indent)]
+            B = [int(i[0]-w-l[0]+i_indent),int(i[0]+w+j_indent)]
             D = [int(i[0]-w+i_indent),int(i[0]+w+j_indent)]
-            E = [int(i[0]+w+i_indent),int(i[0]-w+j_indent)]
-            F = [int(i[0]+w+i_indent),int(i[0]+w+j_indent)]
-            G = [int(i[0]+2*w+i_indent),int(i[0]-w+j_indent)]
-            H = [int(i[0]+2*w+i_indent),int(i[0]+w+j_indent)]
-                       
-            O = [int(i[0]-w-1+i_indent),int(i[0]+w-w2+j_indent)]
-            P = [int(i[0]-w+w2-1+i_indent),int(i[0]+w-w2+j_indent)]
-            Q = [int(i[0]-w+w2-1+i_indent),int(i[0]+w+j_indent)]
+            E = [int(i[0]-w+i_indent),int(i[0]+w+l[0]+j_indent)]
+            F = [int(i[0]+w+i_indent),int(i[0]+w+l[0]+j_indent)]
+            
+            wScore = (2+2*alpha)*intgMAT[D[0], D[1]] - alpha*(intgMAT[B[0], B[1]] +intgMAT[E[0], E[1]] -intgMAT[A[0], A[1]]-intgMAT[F[0], F[1]]  )
 
-            ABGH = (intgMAT[A[0], A[1]] + intgMAT[H[0], H[1]]) - (intgMAT[B[0], B[1]] + intgMAT[G[0], G[1]])
-            CDEF = (intgMAT[C[0], C[1]] + intgMAT[F[0], F[1]]) - (intgMAT[D[0], D[1]] + intgMAT[E[0], E[1]])
-            ODPQ = (intgMAT[O[0], O[1]] + intgMAT[Q[0], Q[1]]) - (intgMAT[D[0], D[1]] + intgMAT[P[0], P[1]])
-            wScore = c1*CDEF + c2*ODPQ - c3*(ABGH - CDEF)
         else:
             w = (l[0]-1)/2
             w2 = np.math.ceil(w/5)
 
-            A = [int(i[0]-2*w-1+i_indent),int(i[0]-w-1+j_indent)]
-            B = [int(i[0]-2*w-1+i_indent),int(i[0]+w+j_indent)]
-            C = [int(i[0]-w-1+i_indent),int(i[0]-w-1+j_indent)]
+            A = [int(i[0]-w-l[0]-1+i_indent),int(i[0]-w-1+j_indent)]
+            B = [int(i[0]-w-l[0]-1+i_indent),int(i[0]+w+j_indent)]
             D = [int(i[0]-w-1+i_indent),int(i[0]+w+j_indent)]
-            E = [int(i[0]+w+i_indent),int(i[0]-w-1+j_indent)]
-            F = [int(i[0]+w+i_indent),int(i[0]+w+j_indent)]
-            G = [int(i[0]+2*w+i_indent),int(i[0]-w-1+j_indent)]
-            H = [int(i[0]+2*w+i_indent),int(i[0]+w+j_indent)]
-           
-            O = [int(i[0]-w-1+i_indent),int(i[0]+w-w2+j_indent)]
-            P = [int(i[0]-w+w2-1+i_indent),int(i[0]+w-w2+j_indent)]
-            Q = [int(i[0]-w+w2-1+i_indent),int(i[0]+w+j_indent)]
-
-            ABGH = (intgMAT[A[0], A[1]] + intgMAT[H[0], H[1]]) - (intgMAT[B[0], B[1]] + intgMAT[G[0], G[1]])
-            CDEF = (intgMAT[C[0], C[1]] + intgMAT[F[0], F[1]]) - (intgMAT[D[0], D[1]] + intgMAT[E[0], E[1]])
-            ODPQ = (intgMAT[O[0], O[1]] + intgMAT[Q[0], Q[1]]) - (intgMAT[D[0], D[1]] + intgMAT[P[0], P[1]])
-            wScore = c1*CDEF + c2*ODPQ - c3*(ABGH - CDEF)
+            E = [int(i[0]-w-1+i_indent),int(i[0]+w+l[0]+j_indent)]
+            F = [int(i[0]+w+i_indent),int(i[0]+w+l[0]+j_indent)]
+            
+            wScore = (2+2*alpha)*intgMAT[D[0], D[1]] - alpha*(intgMAT[B[0], B[1]] +intgMAT[E[0], E[1]] -intgMAT[A[0], A[1]]-intgMAT[F[0], F[1]]  )
         
-        res[0] = wScore/np.power(l[0],0.55)
+        res[0] = wScore/np.power(l[0],0.35)
 
     @guvectorize([(float64[:,:],float64[:], int64[:],int64[:], float64[:])], '(m,m),(m),(),(n)->(n)',target='parallel')
     def parDP(scores,A,j,k, res):
@@ -93,7 +74,7 @@ for CHRM in range(22,NUM_OF_CHRMS+1):
         for i in range(N):
             backT[i] = i
         # pre-compute scores for sub-matrices
-        long_i = np.repeat(np.arange(int(np.floor(minL/2)-(minL+1)%2),N-int(np.floor(minL/2))-1+1),maxL-minL+1) #change it to N-minL/2    
+        long_i = np.repeat(np.arange(int(np.floor(minL/2)-(minL+1)%2),N-int(np.floor(minL/2))-1+1),maxL-minL+1)    
         long_l = np.tile(np.arange(minL,maxL+1),int(N-minL)+1) 
         temp_s = score(intgMAT,long_i,long_l)
         sc = np.zeros([N+maxL,N+maxL],dtype=np.float64)
@@ -121,7 +102,7 @@ for CHRM in range(22,NUM_OF_CHRMS+1):
             if k != j:
                 q.append(k-1)
                 #vars.append((scores[int(k),int(j)]))
-                if((scores[int(k),int(j)])>250 ): 
+                if((scores[int(k),int(j)])>1000): 
                     counter+=1
                     TAD.append(k)
                         
@@ -136,25 +117,7 @@ for CHRM in range(22,NUM_OF_CHRMS+1):
         print()
         np.savetxt('TAD_'+SPECIES+'_nij_chr'+str(CHRM)+'_'+str(CUT),out,delimiter=' ',fmt='%d')
 
-    diagSum = np.zeros(sampleSize)
-    diagMean = np.zeros(sampleSize)
-    rectMean = np.zeros(sampleSize)
-    counter = 0
-    S = 0
-    for delta in range(sampleSize):
-        S = 0
-        counter = 0
-        for i in range(chr1.shape[0]-delta):
-            counter+=1
-            S+= chr1[i,i+delta]
-
-        diagMean[delta] = S/(counter+1)
-        rectMean[delta] = np.dot(diagMean[0:delta+1],np.arange(delta+1,0,-1)) 
-    
-    for i in range(chr1.shape[0]):
-        for j in range(i,np.min([i+sampleSize,chr1.shape[1]])):
-            chr1[i,j]=chr1[i,j]/diagMean[j-i]
-    # compute the integral image
+    # compute new integral image
     st = time.time()
     intgMat = np.zeros(chr1.shape,dtype=np.float64)
     for delta in range(1,sampleSize):
