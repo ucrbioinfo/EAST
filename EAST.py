@@ -90,6 +90,24 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
                 backT[j] = kk[np.argmax(vals)]+1
 
         # Extracting TADs based on backT
+        
+        #tmpList = []
+        #q = []
+        #q.append(backT.shape[0]-1)
+        #while len(q)>0:                
+        #    j = int(q.pop())
+        #    k = backT[int(j)]
+               
+        #    if k != j:
+                   
+        #        #print(k,j,scores[k,j],ctcf_scores[k,j])
+        #        if (scores[int(k),int(j)])>0:
+        #            tmpList.append((scores[int(k),int(j)]))
+        #        q.append(k-1)      
+        #    elif j != 0:
+        #        q.append(j-1)
+        
+        #threshold = np.mean(tmpList) - 1*np.sqrt( np.var(tmpList))
         counter = 0
         q = []
         TAD = []
@@ -101,15 +119,13 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
             k = backT[int(j)]
             if k != j:
                 q.append(k-1)
-                #vars.append((scores[int(k),int(j)]))
                 if((scores[int(k),int(j)])>1000): 
                     counter+=1
                     TAD.append(k)
                         
             elif j != 0:
                 q.append(j-1)
-        # threshold = np.mean(vars) - 1*np.sqrt( np.var(vars))
-        print('Number of TADs:',counter)
+        #print('Number of TADs:',counter)
         TAD.sort()
         out = np.asarray(TAD)
         out.reshape([len(TAD),1])
