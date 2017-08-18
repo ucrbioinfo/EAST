@@ -155,16 +155,11 @@ for CHRM in range(22,NUM_OF_CHRMS+1):
         for j in range(i,np.min([i+sampleSize,chr1.shape[1]])):
             chr1[i,j]=chr1[i,j]/diagMean[j-i]
     # compute the integral image
-    intgMat1 = np.zeros(chr1.shape,dtype=np.float64)
-    intgMat1[0,0]=chr1[0,0]
     st = time.time()
-    for i in range(1,intgMat1.shape[1]):
-        intgMat1[0,i] = intgMat1[0,i-1]+chr1[0,i]
-    for i in range(1,intgMat1.shape[0]):
-        intgMat1[i,0] = intgMat1[i-1,0]+chr1[i,0]
-    for i in range(1,intgMat1.shape[0]):
-        for j in range(1,intgMat1.shape[1]):
-            intgMat1[i,j] = intgMat1[i-1,j]+intgMat1[i,j-1]-intgMat1[i-1,j-1]+ chr1[i,j]
-    
+    intgMat = np.zeros(chr1.shape,dtype=np.float64)
+    for delta in range(1,sampleSize):
+        for i in range(chr1.shape[0]-delta):
+            intgMat[i,i+delta] = chr1[i,i+delta] + intgMat[i+1,i+delta] + intgMat[i,i+delta-1] - intgMat[i+1,i+delta-1]
     print('time to compute the integral image:',time.time()-st)
-    findTADs(intgMat1)
+    
+    findTADs(intgMat)
