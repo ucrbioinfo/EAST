@@ -2,13 +2,18 @@ import numpy as np
 from timeit import time
 from numba import guvectorize,float64,int64
 import os
+import importlib
+pnd = importlib.find_loader('pandas')
+PANDAS_INSTALLED = pnd is not None
 
+if PANDAS_INSTALLED:
+    import pandas as pd
 maxW = 80
 maxL = 2*maxW + 1
 minL = 3
 sampleSize = 2*maxL
 
-SPECIES = 'mES'
+SPECIES = 'hES'
 if SPECIES=='hIMR90' or SPECIES=='hES':
     NUM_OF_CHRMS = 23
 elif SPECIES == 'mES' or 'mCO':
@@ -16,7 +21,12 @@ elif SPECIES == 'mES' or 'mCO':
 for CHRM in range(1,NUM_OF_CHRMS+1):
     print('Loading Chromosome '+ str(CHRM))
     st = time.time()
-    chr1 = np.loadtxt(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/nij/nij.chr'+str(CHRM))
+    if PANDAS_INSTALLED:
+        chr1 = pd.read_csv(os.path.abspath(os.sep)+'Users/Abbas/Google Drive/Research/Dataset/'+SPECIES+'/nij/nij.chr'+str(CHRM),sep='\t',header=None)
+        chr1 = chr1.values
+    else:
+        chr1 = np.genfromtxt(os.path.abspath(os.sep)+'Users/Abbas/Google Drive/Research/Dataset/'+SPECIES+'/nij/nij.chr'+str(CHRM))
+    
     print('time to read chromosome ',CHRM,':',time.time()-st)
     CUT = chr1.shape[0]
     #print('********************** TAD DETECTION *****************************')
@@ -32,7 +42,6 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
         alpha = 0.1  #penalty for inter-TAD interactions
         if l[0] % 2 == 0:
             w = (l[0])/2
-            w2 = np.math.ceil(w/5)
 
             A = [int(i[0]-w-l[0]+i_indent),int(i[0]-w+j_indent)]
             B = [int(i[0]-w-l[0]+i_indent),int(i[0]+w+j_indent)]
@@ -41,10 +50,8 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
             F = [int(i[0]+w+i_indent),int(i[0]+w+l[0]+j_indent)]
             
             wScore = (2+2*alpha)*intgMAT[D[0], D[1]] - alpha*(intgMAT[B[0], B[1]] +intgMAT[E[0], E[1]] -intgMAT[A[0], A[1]]-intgMAT[F[0], F[1]]  )
-
         else:
             w = (l[0]-1)/2
-            w2 = np.math.ceil(w/5)
 
             A = [int(i[0]-w-l[0]-1+i_indent),int(i[0]-w-1+j_indent)]
             B = [int(i[0]-w-l[0]-1+i_indent),int(i[0]+w+j_indent)]
@@ -53,8 +60,7 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
             F = [int(i[0]+w+i_indent),int(i[0]+w+l[0]+j_indent)]
             
             wScore = (2+2*alpha)*intgMAT[D[0], D[1]] - alpha*(intgMAT[B[0], B[1]] +intgMAT[E[0], E[1]] -intgMAT[A[0], A[1]]-intgMAT[F[0], F[1]]  )
-        
-        res[0] = wScore/np.power(l[0],0.35)
+        res[0] = wScore/np.power(l[0],0.38)
 
     @guvectorize([(float64[:,:],float64[:], int64[:],int64[:], float64[:])], '(m,m),(m),(),(n)->(n)',target='parallel')
     def parDP(scores,A,j,k, res):
@@ -76,6 +82,7 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
         # pre-compute scores for sub-matrices
         long_i = np.repeat(np.arange(int(np.floor(minL/2)-(minL+1)%2),N-int(np.floor(minL/2))-1+1),maxL-minL+1)    
         long_l = np.tile(np.arange(minL,maxL+1),int(N-minL)+1) 
+
         temp_s = score(intgMAT,long_i,long_l)
         sc = np.zeros([N+maxL,N+maxL],dtype=np.float64)
         sc[(long_i-np.floor(long_l/2)+(long_l+1)%2).astype(int)+maxL,(long_i+np.floor(long_l/2)).astype(int)] = temp_s            
@@ -83,31 +90,31 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
 
         for j in range(minL-1,N):
             k_size = np.min(list([j,maxL-1]))
-            kk = np.arange(j-k_size,j)     
+            kk = np.arange(j-k_size,j)    
             vals = parDP(scores,T,j,kk)
             T[j] = np.max([np.max(vals),T[j-1]])
             if(T[j]>T[j-1]):
                 backT[j] = kk[np.argmax(vals)]+1
 
         # Extracting TADs based on backT
-        
-        #tmpList = []
-        #q = []
-        #q.append(backT.shape[0]-1)
-        #while len(q)>0:                
-        #    j = int(q.pop())
-        #    k = backT[int(j)]
+        tmpList = []
+        q = []
+        q.append(backT.shape[0]-1)
+        while len(q)>0:                
+            j = int(q.pop())
+            k = backT[int(j)]
                
-        #    if k != j:
+            if k != j:
                    
-        #        #print(k,j,scores[k,j],ctcf_scores[k,j])
-        #        if (scores[int(k),int(j)])>0:
-        #            tmpList.append((scores[int(k),int(j)]))
-        #        q.append(k-1)      
-        #    elif j != 0:
-        #        q.append(j-1)
+                #print(k,j,scores[k,j],ctcf_scores[k,j])
+                if (scores[int(k),int(j)])>0:
+                    tmpList.append((scores[int(k),int(j)]))
+                q.append(k-1)      
+            elif j != 0:
+                q.append(j-1)
         
-        #threshold = np.mean(tmpList) - 1*np.sqrt( np.var(tmpList))
+        threshold = np.mean(tmpList) - 1*np.sqrt( np.var(tmpList))
+        print('threshold',threshold)
         counter = 0
         q = []
         TAD = []
@@ -119,7 +126,7 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
             k = backT[int(j)]
             if k != j:
                 q.append(k-1)
-                if((scores[int(k),int(j)])>1000): 
+                if((scores[int(k),int(j)])>threshold): 
                     counter+=1
                     TAD.append(k)
                         
