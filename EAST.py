@@ -114,7 +114,6 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
                 q.append(j-1)
         
         threshold = np.mean(tmpList) - 1*np.sqrt( np.var(tmpList))
-        print('threshold',threshold)
         counter = 0
         q = []
         TAD = []
