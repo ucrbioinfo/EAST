@@ -9,7 +9,8 @@ EAST: Efficient and Accurate Detection of Topologically Associating Domains from
 # Dependencies:
 
 - Python 3 or higher
-- numba library
+- numba package
+- pandas package
 
 # Input format 
 
