@@ -13,8 +13,9 @@ EAST: Efficient and Accurate Detection of Topologically Associating Domains from
 
 # Input format and Parameters
 
-Input files are matrices in the format of Dixon et al. at http://chromosome.sdsc.edu/mouse/hi-c/download.html. 
-- The maxW parameter: determines the maximum size of a TAD allowed in the algorithm (maximum size of a TAD = resoultion*maxW).
-- The normalization parameter N: larger values of N  lead to smaller TADs. 
-- Alhpa and beta are experimentally determined and set to 0.2.
+Input files are matrices of format:
+
+ 1- Dixon et al. at https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE35156 or  
+ 2- Rao et al. at https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE63525
+
 
