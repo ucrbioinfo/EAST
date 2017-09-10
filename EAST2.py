@@ -54,7 +54,8 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
             knorm = np.genfromtxt(os.path.abspath(os.sep)+'Users/Abbas/Google Drive/Research/Dataset/'+SPECIES+'/'+str(int(RESOLUTION/1000))+'kb_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name+'.Rawexpected')
         # Normalizing the data
         for i in range(chr1Data.shape[0]):
-            chr1Data[i,2] = chr1Data[i,2] / knorm[0][chr1Data[i,1] - chr1Data[i,0]]
+            if (chr1Data[i,1] - chr1Data[i,0]) != 0:
+                chr1Data[i,2] = chr1Data[i,2] / knorm[0][chr1Data[i,1] - chr1Data[i,0] - 1]
         chr1 = sparse.csr_matrix((chr1Data[:,2],(chr1Data[:,0],chr1Data[:,1])))
         # comment this line if you don't have enough memory to store the dense matrix for higher resolution
         chr1 = chr1.todense()
