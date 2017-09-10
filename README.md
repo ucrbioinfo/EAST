@@ -11,11 +11,15 @@ EAST: Efficient and Accurate Detection of Topologically Associating Domains from
 - Python 3 or higher
 - numba library
 
-# Input format and Parameters
+# Input format 
 
 Input files are matrices of format:
 
  1- Dixon et al. at https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE35156 or  
  2- Rao et al. at https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE63525
 
+# Parameters
+
+- maxL: max length of a TAD allowed
+- Nfactor: normalization factor
 
