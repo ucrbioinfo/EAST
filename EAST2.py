@@ -64,10 +64,10 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
         print('Loading Chromosome '+ str(CHRM))
         st = time.time()
         if PANDAS_INSTALLED:
-            chr1 = pd.read_csv(os.path.abspath(os.sep)+'Users/Abbas/Google Drive/Research/Dataset/'+SPECIES+'/nij/nij.chr'+str(CHRM),sep='\t',header=None)
+            chr1 = pd.read_csv(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/nij/nij.chr'+str(CHRM),sep='\t',header=None)
             chr1 = chr1.values
         else:
-            chr1 = np.genfromtxt(os.path.abspath(os.sep)+'Users/Abbas/Google Drive/Research/Dataset/'+SPECIES+'/nij/nij.chr'+str(CHRM))
+            chr1 = np.genfromtxt(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/nij/nij.chr'+str(CHRM))
         print('time to read the chromosome ',CHRM,':',time.time()-st)
     N = chr1.shape[0]
 
