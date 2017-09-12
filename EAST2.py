@@ -43,15 +43,15 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
                 name = str(int(RESOLUTION/1000))+'kb'
             else:
                 name = str(int(RESOLUTION/1000000))+'mb'
-            chr1Data = pd.read_csv(os.path.abspath(os.sep)+'Users/Abbas/Google Drive/Research/Dataset/'+SPECIES+'/'+name+'_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name +'.RAWobserved',sep='\t',header=None)
+            chr1Data = pd.read_csv(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+name+'_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name +'.RAWobserved',sep='\t',header=None)
             chr1Data = chr1Data.values
             chr1Data[:,0:2] = np.floor(chr1Data[:,0:2]/RESOLUTION)
-            knorm = pd.read_csv(os.path.abspath(os.sep)+'Users/Abbas/Google Drive/Research/Dataset/'+SPECIES+'/'+name+'_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+ name+'.Rawexpected',sep='\t',header=None)
+            knorm = pd.read_csv(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+name+'_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+ name+'.Rawexpected',sep='\t',header=None)
 
         else:
-            chr1Data = np.genfromtxt(os.path.abspath(os.sep)+'Users/Abbas/Google Drive/Research/Dataset/'+SPECIES+'/'+str(int(RESOLUTION/1000))+'kb_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name+'.RAWobserved')
+            chr1Data = np.genfromtxt(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+str(int(RESOLUTION/1000))+'kb_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name+'.RAWobserved')
             chr1Data[:,0:2] = np.round(chr1Data[:,0:2]/RESOLUTION)
-            knorm = np.genfromtxt(os.path.abspath(os.sep)+'Users/Abbas/Google Drive/Research/Dataset/'+SPECIES+'/'+str(int(RESOLUTION/1000))+'kb_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name+'.Rawexpected')
+            knorm = np.genfromtxt(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+str(int(RESOLUTION/1000))+'kb_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name+'.Rawexpected')
         # Normalizing the data
         for i in range(chr1Data.shape[0]):
             if (chr1Data[i,1] - chr1Data[i,0]) != 0:
