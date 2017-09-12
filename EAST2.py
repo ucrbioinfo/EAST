@@ -2,7 +2,6 @@ import numpy as np
 from timeit import time
 from numba import guvectorize,float64,int64
 import os
-import itertools
 from scipy import sparse
 from detect_peaks import detect_peaks
 import importlib
