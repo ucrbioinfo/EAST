@@ -10,12 +10,12 @@ PANDAS_INSTALLED = pnd is not None
 if PANDAS_INSTALLED:
     import pandas as pd
 
-RESOLUTION = 500000
+RESOLUTION = 5000
 if RESOLUTION < 500000:
-    W = 20
+    W = 20 # insulation window size
 else:
     W = 10
-maxL = 2*int(np.round(3200000/RESOLUTION)) + 1
+maxL = 2*int(np.round(3200000/RESOLUTION)) + 1 # maximum length of TAD allowed
 Nfactor = 0.35
 
 class species:
@@ -71,14 +71,14 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
         print('time to read the chromosome ',CHRM,':',time.time()-st)
     N = chr1.shape[0]
 
-    # compute the integral image (We don't care about the values on the diagonal)
+    # compute the integral image (We ignore the values on the diagonal)
     st = time.time()
     intgMat = np.zeros([2*maxL,N],dtype=np.float64)
-    for i in range(chr1.shape[0]-1): # delta = 1                
-        intgMat[1,i+1] = chr1[i,i+1] + intgMat[0,i+1] + intgMat[0,i] 
+    I = np.arange(N-1) # delta = 1                
+    intgMat[1,I+1] = chr1[I,I+1] + intgMat[0,I+1] + intgMat[0,I] 
     for delta in range(2,2*maxL):
-        for i in range(chr1.shape[0]-delta):               
-            intgMat[delta,i+delta] = chr1[i,i+delta] + intgMat[delta-1,i+delta] + intgMat[delta-1,i+delta-1] - intgMat[delta-2,i+delta-1] 
+        I = np.arange(N-delta)
+        intgMat[delta,I+delta] = chr1[I,I+delta] + intgMat[delta-1,I+delta] + intgMat[delta-1,I+delta-1] - intgMat[delta-2,I+delta-1] 
     print('time to compute the integral image:',time.time()-st)
     #print('********************** TAD DETECTION *****************************')
     # TAD Detection
