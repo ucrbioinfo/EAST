@@ -16,9 +16,9 @@ if RESOLUTION < 500000:
 else:
     W = 10
 maxL = 2*int(np.round(3200000/RESOLUTION)) + 1 # maximum length of TAD allowed
-Nfactor = 0.35
+Nfactor = 0.35 # normalization factor: larger values lead to smaller TADs
 
-class species:
+class species: # add your own data
     K526 = 'K526'
     hES = 'hES'
     mES = 'mES'
