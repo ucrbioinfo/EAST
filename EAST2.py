@@ -56,7 +56,8 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
         #knorm[0].append(1)
         #knorm = np.array(knorm[0])
         #chr1Data[:,2] = np.divide(chr1Data[:,2],knorm[np.array(chr1Data[:,1] - chr1Data[:,0] - 1,dtype=np.int)])
-        chr1 = sparse.csr_matrix((chr1Data[:,2],(chr1Data[:,0],chr1Data[:,1])))
+        n = np.max([np.max(chr1Data[:,0]),np.max(chr1Data[:,1])])+1
+        chr1 = sparse.csr_matrix((chr1Data[:,2],(chr1Data[:,0],chr1Data[:,1])),shape = (n,n))
         # comment this line if you don't have enough memory to store the dense matrix for higher resolution
         chr1 = chr1.todense()
         print('time to read the chromosome',CHRM,'and normalizing it:',time.time()-st)
