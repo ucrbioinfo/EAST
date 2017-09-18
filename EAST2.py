@@ -53,7 +53,6 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
             knorm = np.genfromtxt(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+str(int(RESOLUTION/1000))+'kb_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name+'.Rawexpected')
         # Normalizing the data
         knorm = knorm.values.T.tolist()
-        knorm[0].append(1)
         knorm = np.array(knorm[0])
         chr1Data[:,2] = np.divide(chr1Data[:,2],np.multiply(knorm[np.array(chr1Data[:,1],dtype=np.int)],knorm[np.array(chr1Data[:,0],dtype=np.int)]))
         
