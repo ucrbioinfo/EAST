@@ -45,22 +45,22 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
             chr1Data = pd.read_csv(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+name+'_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name +'.RAWobserved',sep='\t',header=None)
             chr1Data = chr1Data.values
             chr1Data[:,0:2] = np.floor(chr1Data[:,0:2]/RESOLUTION)
-            knorm = pd.read_csv(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+name+'_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+ name+'.Rawexpected',sep='\t',header=None)
+            knorm = pd.read_csv(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+name+'_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+ name+'.KRnorm',sep='\t',header=None)
 
         else:
             chr1Data = np.genfromtxt(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+str(int(RESOLUTION/1000))+'kb_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name+'.RAWobserved')
             chr1Data[:,0:2] = np.round(chr1Data[:,0:2]/RESOLUTION)
-            knorm = np.genfromtxt(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+str(int(RESOLUTION/1000))+'kb_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name+'.Rawexpected')
+            knorm = np.genfromtxt(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+str(int(RESOLUTION/1000))+'kb_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name+'.KRnorm')
         # Normalizing the data
-        knorm = knorm.values.T.tolist()
-        knorm = np.array(knorm[0])
-        chr1Data[:,2] = np.divide(chr1Data[:,2],np.multiply(knorm[np.array(chr1Data[:,1],dtype=np.int)],knorm[np.array(chr1Data[:,0],dtype=np.int)]))
+        #knorm = knorm.values.T.tolist()
+        #knorm = np.array(knorm[0])
+        #chr1Data[:,2] = np.divide(chr1Data[:,2],np.multiply(knorm[np.array(chr1Data[:,1],dtype=np.int)],knorm[np.array(chr1Data[:,0],dtype=np.int)]))
         
         n = np.max([np.max(chr1Data[:,0]),np.max(chr1Data[:,1])])+1
         chr1 = sparse.csr_matrix((chr1Data[:,2],(chr1Data[:,0],chr1Data[:,1])),shape = (n,n))
         # comment this line if you don't have enough memory to store the dense matrix for higher resolution
         chr1 = chr1.todense()
-        print('time to read the chromosome',CHRM,'and normalizing it:',time.time()-st)
+        print('time to read the chromosome',CHRM,time.time()-st)
     elif DataType == dataType.Dixon: # Dixon data Type 
         print('Loading Chromosome '+ str(CHRM))
         st = time.time()
