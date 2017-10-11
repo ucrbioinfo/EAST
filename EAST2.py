@@ -18,7 +18,7 @@ else:
 maxL = 2*int(np.round(3200000/RESOLUTION)) + 1 # maximum length of TAD allowed
 Nfactor = 0.35 # normalization factor: larger values lead to smaller TADs
 
-class species: # add your own data
+class cellType: # add your own data
     K526 = 'K526'
     hES = 'hES'
     mES = 'mES'
@@ -26,12 +26,12 @@ class dataType:
     Dixon = 'Dixon'
     Rao = 'Rao'
 
-SPECIES = species.K526
+CELLTYPE = cellType.K526
 DataType = dataType.Rao 
 
-if SPECIES=='hIMR90' or SPECIES=='hES' or SPECIES=='K526':
+if CELLTYPE=='hIMR90' or CELLTYPE=='hES' or CELLTYPE=='K526':
     NUM_OF_CHRMS = 22
-elif SPECIES == 'mES' or 'mCO':
+elif CELLTYPE == 'mES' or CELLTYPE == 'mCO':
     NUM_OF_CHRMS = 20
 for CHRM in range(1,NUM_OF_CHRMS+1):
     if DataType == dataType.Rao:
@@ -42,15 +42,15 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
                 name = str(int(RESOLUTION/1000))+'kb'
             else:
                 name = str(int(RESOLUTION/1000000))+'mb'
-            chr1Data = pd.read_csv(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+name+'_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name +'.RAWobserved',sep='\t',header=None)
+            chr1Data = pd.read_csv(os.path.abspath(os.sep)+'Dataset/'+CELLTYPE+'/'+name+'_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name +'.RAWobserved',sep='\t',header=None)
             chr1Data = chr1Data.values
             chr1Data[:,0:2] = np.floor(chr1Data[:,0:2]/RESOLUTION)
-            knorm = pd.read_csv(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+name+'_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+ name+'.KRnorm',sep='\t',header=None)
+            knorm = pd.read_csv(os.path.abspath(os.sep)+'Dataset/'+CELLTYPE+'/'+name+'_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+ name+'.KRnorm',sep='\t',header=None)
 
         else:
-            chr1Data = np.genfromtxt(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+str(int(RESOLUTION/1000))+'kb_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name+'.RAWobserved')
+            chr1Data = np.genfromtxt(os.path.abspath(os.sep)+'Dataset/'+CELLTYPE+'/'+str(int(RESOLUTION/1000))+'kb_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name+'.RAWobserved')
             chr1Data[:,0:2] = np.round(chr1Data[:,0:2]/RESOLUTION)
-            knorm = np.genfromtxt(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/'+str(int(RESOLUTION/1000))+'kb_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name+'.KRnorm')
+            knorm = np.genfromtxt(os.path.abspath(os.sep)+'Dataset/'+CELLTYPE+'/'+str(int(RESOLUTION/1000))+'kb_resolution_intrachromosomal/chr'+str(CHRM)+'/MAPQGE30/chr'+str(CHRM)+'_'+name+'.KRnorm')
         # Normalizing the data
         #knorm = knorm.values.T.tolist()
         #knorm = np.array(knorm[0])
@@ -65,10 +65,10 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
         print('Loading Chromosome '+ str(CHRM))
         st = time.time()
         if PANDAS_INSTALLED:
-            chr1 = pd.read_csv(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/nij/nij.chr'+str(CHRM),sep='\t',header=None)
+            chr1 = pd.read_csv(os.path.abspath(os.sep)+'Dataset/'+CELLTYPE+'/nij/nij.chr'+str(CHRM),sep='\t',header=None)
             chr1 = chr1.values
         else:
-            chr1 = np.genfromtxt(os.path.abspath(os.sep)+'Dataset/'+SPECIES+'/nij/nij.chr'+str(CHRM))
+            chr1 = np.genfromtxt(os.path.abspath(os.sep)+'Dataset/'+CELLTYPE+'/nij/nij.chr'+str(CHRM))
         print('time to read the chromosome ',CHRM,':',time.time()-st)
     N = chr1.shape[0]
 
