@@ -272,6 +272,6 @@ for CHRM in range(1,NUM_OF_CHRMS+1):
         TADx1 = (np.asarray(TADx1)).reshape([len(TADx1),1])
         TADx2 = (np.asarray(TADx2)).reshape([len(TADx2),1])
         TAD = np.concatenate((TADx1,TADx2),axis=1)
-        np.savetxt(SPECIES+'_nij_chr'+str(CHRM)+'_'+str(N),TAD,delimiter=' ',fmt='%d')
+        np.savetxt(CELLTYPE+'_nij_chr'+str(CHRM)+'_'+str(N),TAD,delimiter=' ',fmt='%d')
 
     findTADs(intgMat)
